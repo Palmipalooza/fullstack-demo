@@ -1,4 +1,5 @@
 import React from 'react';
+import Modal from './Modal';
 import Nav from './Nav.jsx';
 import BugTile from './BugTile.jsx';
 import exampleData from '../example-data/exampleData';
@@ -11,8 +12,10 @@ class App extends React.Component {
     this.state = {
       filter: 'None',
       bugs: exampleData,
+      show: false,
     };
     this.filterHandler = this.filterHandler.bind(this);
+    this.showModal = this.showModal.bind(this);
   }
 
   filterHandler(priority) {
@@ -21,29 +24,40 @@ class App extends React.Component {
     console.log(this.state)
   }
 
+  showModal(event) {
+    this.setState({ show: true })
+  }
+
   render() {
     return (
-      <table>
-        <Nav
-          filterHandler={this.filterHandler}
+      <div className="App">
+        <h1>Get to Work Residents!</h1>
+        <Modal
+          show={this.state.show}
         />
-        {this.state.bugs.map((bug) => {
-          // dont map over values that dont match the conditional below
-          if (bug.threatLevel === this.state.filter || this.state.filter === 'None') {
-            return (
-              <BugTile
-                bugName={bug.bugName}
-                bugDescription={bug.bugDescription}
-                reportedBy={bug.reportedBy}
-                createdDate={bug.createdDate}
-                assignedTo={bug.assignedTo}
-                threatLevel={bug.threatLevel}
-                key={bug.bugName}
-              />
-            )
-          }
-        })}
-      </table>
+        <button onClick={e => {this.showModal()}}> Submit New Bug </button>
+        <table>
+          <Nav
+            filterHandler={this.filterHandler}
+          />
+          {this.state.bugs.map((bug) => {
+            // conditionally render: dont map over values that dont match the conditional below
+            if (bug.threatLevel === this.state.filter || this.state.filter === 'None') {
+              return (
+                <BugTile
+                  bugName={bug.bugName}
+                  bugDescription={bug.bugDescription}
+                  reportedBy={bug.reportedBy}
+                  createdDate={bug.createdDate}
+                  assignedTo={bug.assignedTo}
+                  threatLevel={bug.threatLevel}
+                  key={bug.bugName}
+                />
+              )
+            }
+          })}
+        </table>
+      </div>
     );
   }
 }

@@ -19,13 +19,14 @@ class App extends React.Component {
   }
 
   filterHandler(priority) {
-    console.log('clicked', priority)
+    //console.log('clicked', priority)
     this.setState({ filter: priority });
-    console.log(this.state)
+    //console.log(this.state)
   }
 
-  showModal(event) {
-    this.setState({ show: true })
+  showModal(e) {
+    console.log(this.state.show)
+    this.setState({ show: !this.state.show })
   }
 
   render() {
@@ -33,30 +34,36 @@ class App extends React.Component {
       <div className="App">
         <h1>Get to Work Residents!</h1>
         <Modal
-          show={this.state.show}
-        />
-        <button onClick={e => {this.showModal()}}> Submit New Bug </button>
-        <table>
-          <Nav
-            filterHandler={this.filterHandler}
-          />
-          {this.state.bugs.map((bug) => {
-            // conditionally render: dont map over values that dont match the conditional below
-            if (bug.threatLevel === this.state.filter || this.state.filter === 'None') {
-              return (
-                <BugTile
-                  bugName={bug.bugName}
-                  bugDescription={bug.bugDescription}
-                  reportedBy={bug.reportedBy}
-                  createdDate={bug.createdDate}
-                  assignedTo={bug.assignedTo}
-                  threatLevel={bug.threatLevel}
-                  key={bug.bugName}
-                />
-              )
-            }
-          })}
-        </table>
+          onClose={this.showModal}
+          show={this.state.show}>
+          Message in Modal
+        </Modal>
+
+        <div>
+          <button onClick={e => { this.showModal() }}>Submit New Bug</button>
+          <table>
+            <Nav
+              filterHandler={this.filterHandler}
+            />
+
+            {this.state.bugs.map((bug) => {
+              // conditionally render: dont map over values that dont match the conditional below
+              if (bug.threatLevel === this.state.filter || this.state.filter === 'None') {
+                return (
+                  <BugTile
+                    bugName={bug.bugName}
+                    bugDescription={bug.bugDescription}
+                    reportedBy={bug.reportedBy}
+                    createdDate={bug.createdDate}
+                    assignedTo={bug.assignedTo}
+                    threatLevel={bug.threatLevel}
+                    key={bug.bugName}
+                  />
+                )
+              }
+            })}
+          </table>
+        </div>
       </div>
     );
   }
